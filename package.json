@@ -1,7 +1,7 @@
 {
-  "name": "proyecto",
+  "name": "cuderi-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Core para los proyectos de cuderi",
   "main": "app.js",
   "directories": {
     "test": "test"
@@ -14,7 +14,7 @@
     "client": "node gen/client.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Carlo André Cuya Del Risco",
   "license": "ISC",
   "dependencies": {
     "fastify": "^3.20.2",
