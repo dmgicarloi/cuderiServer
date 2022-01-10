@@ -1,0 +1,24 @@
+module.exports = async function (_this, opts) {
+    _this.models.{{model}} = class {
+        constructor() {
+            this.name = '{{name}}'
+            const { knex } = _this
+            this.knex = knex
+        }
+        create (params = {}) {
+            return this.knex(this.name).insert(params).returning([{{returning}}])
+        }
+        read (fields = []) {
+            return this.knex(this.name).select(fields)
+        }
+        readById ({{params}}, fields = []) {
+            return this.knex(this.name).select(fields).where({{paramsData}}).first()
+        }
+        update ({{params}}, params) {
+            return this.knex(this.name).update(params).where({{paramsData}})
+        }
+        delete ({{params}}) {
+            return this.knex(this.name).where({{paramsData}}).del()
+        }
+    }
+}

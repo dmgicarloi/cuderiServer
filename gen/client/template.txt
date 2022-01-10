@@ -1,0 +1,9 @@
+q-page.q-pa-sm
+  q-card
+      header-btn(name="Mantenimiento {{upperCamelCaseModel}}" :buttons="buttons")
+      q-card-section
+          c-table(:rows="rows" :columns="columns" selection="single" ref="table{{upperCamelCaseModel}}" @row-select="rowSelect{{upperCamelCaseModel}}")
+  c-modal(v-model:value="openAdd" :title="action === 'create' ? 'Agregar' : 'Modificar'" @submit="saveAcccion")        
+      q-card(flat bordered)
+        q-card-section.q-col-gutter-xs
+            .row.q-col-gutter-xs{{inputsTemplate}}

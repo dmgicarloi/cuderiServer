@@ -1,0 +1,124 @@
+module.exports = async function (_this, opts) {
+
+  let schema = {}
+
+  /* -------------------------------------------------------------------- CREATE */
+  // API PARA CREAR UN REGISTRO
+  schema = {
+    body: {
+      type: 'object',
+      required: [{{requiredNotNull}}],
+      properties: {
+        {{propertiesNotNull}}
+      },
+    },
+  };
+  _this.post("/{{api}}", { schema }, async (req, reply) => {
+      try {
+        const params = req.body;
+        const {{instanceService}} = _this.getService('{{service}}')
+        const result = await {{instanceService}}.create(params);
+        return _this.success('create', result);
+      } catch (e) {
+		    return _this.badRequest("No ha sido posible crear el registro.")
+      }
+  });
+
+  /* -------------------------------------------------------------------- READ */
+  // API PARA LISTAR TODOS LOS REGISTROS DE UNA TABLA
+  /* schema = {
+    params: {
+      type: 'object',
+      required: [{{required}}],
+      properties: {
+        {{properties}}
+      },
+    },
+    query: {
+      properties: {
+        pagination: { type: 'number' },
+        fields: { type: 'array' }
+      },
+    },
+  }; */
+
+  _this.get("/{{api}}", {}, async (req, reply) => {
+    const { pagination } = req.query
+    const fields = req.query['fields[]'] || req.query.fields || []
+    if (!pagination) {
+      const {{instanceService}} = _this.getService('{{service}}')
+      return {{instanceService}}.read(fields)
+    } else {
+      const {{instanceModel}} = _this.getModel('{{nameModel}}')
+      const data = await _this.pagination({{instanceModel}}.read(fields), pagination)
+      return data
+    }
+  });
+  
+  // API PARA LISTAR UN REGISTRO POR SU IDENTIFICADOR
+  schema = {
+    params: {
+      type: 'object',
+      required: [{{required}}],
+      properties: {
+        {{properties}}
+      },
+    },
+    query: {
+      properties: {
+        fields: { type: 'array' }
+      },
+    },
+  };
+  _this.get("/{{api}}/{{path}}", { schema }, async (req, reply) => {
+    const { {{params}} } = req.params;
+    const fields = req.query['fields[]'] || req.query.fields || []
+    const {{instanceService}} = _this.getService('{{service}}')
+    return {{instanceService}}.readById({{params}}, fields)
+  });
+
+  /* -------------------------------------------------------------------- UPDATE */
+// API PARA ACTUALIZAR UN REGISTRO POR SU IDENTIFICADOR
+  schema = {
+    body: {
+      type: 'object',
+      required: [{{required}}, {{requiredNotNull}}],
+      properties: {
+        {{properties}}, {{propertiesNotNull}}
+      },
+    },
+  };
+  _this.put("/{{api}}", { schema }, async (req, reply) => {
+    try {
+        const params = req.body;
+        const { {{params}} } = params;
+        const {{instanceService}} = _this.getService('{{service}}')
+        const result = await {{instanceService}}.update({{params}}, params)
+        return _this.success('update', result);
+    } catch (e) {
+        return _this.badRequest("No ha sido posible actualizar el registro.")
+    }
+  });
+
+  /* -------------------------------------------------------------------- DELETE */
+  // API PARA ELIMINAR UN REGISTRO
+  schema = {
+    params: {
+      type: 'object',
+      required: [{{required}}],
+      properties: {
+        {{properties}}
+      },
+    }
+  };
+  _this.delete("/{{api}}/{{path}}", { schema }, async (req, reply) => {
+    try {
+        const { {{params}} } = req.params;
+        const {{instanceService}} = _this.getService('{{service}}')
+        const result = await {{instanceService}}.delete({{params}});
+        return _this.success('delete', result);
+    } catch (e) {
+        return _this.badRequest("No ha sido posible eliminar el contenido.")
+    }
+  });
+}

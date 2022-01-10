@@ -1,0 +1,124 @@
+import { ref, reactive } from 'vue'
+import CTable from 'components/CTable'
+import { config } from './config'
+
+export default {
+  mixins: [ config ],
+  components: {
+    CTable
+  },
+  data () {
+    return {
+        buttons: [
+            { label: 'Agregar', icon: 'fas fa-plus', click: this.openAgregar },
+            { label: 'Modificar', icon: 'fas fa-edit', click: this.openActualizar },
+            { label: 'Eliminar', icon: 'fas fa-trash', click: this.delete{{upperCamelCaseModel}} }
+        ]
+    }
+  },
+  setup () {
+    const openAdd = ref(false)
+    const action = 'create'
+    const row{{upperCamelCaseModel}} = ref(null)
+    const form = reactive({
+{{reactiveParams}}
+    })
+    return {
+        form,
+        openAdd,
+        action,
+        row{{upperCamelCaseModel}}
+    }
+  },
+  methods: {
+    openAgregar () {
+        this.action = 'create'
+        this.clear(this.form)
+        this.openAdd = true
+    },
+    openActualizar () {
+        if(!this.row{{upperCamelCaseModel}}) {
+            this.$notify('Selecciona un registro', 'warning')
+        } else {
+            this.action = 'update'
+{{loadParamsUpdate}}
+            this.openAdd = true
+        } 
+    },
+    saveAcccion () {
+        if (this.action === 'create') {
+            this.create{{upperCamelCaseModel}}()
+        } else {
+            this.$confirm(`El registro se modificará ¿Desea continuar?`, 'info').onOk(async () => {
+                this.update{{upperCamelCaseModel}}()
+            })
+        }
+    },
+    rowSelect{{upperCamelCaseModel}} (row) {
+        this.row{{upperCamelCaseModel}} = row
+    },
+    async create{{upperCamelCaseModel}} () {
+        try {
+            const { result, message } = await this.$http.post('api/{{paramsPath}}', this.form)
+            const row = {
+{{createParams}}
+            }
+            this.rows.unshift(row)
+            this.openAdd = false
+            this.$notify(message, 'success')
+        } catch(e) {
+            this.$notify(e.message, 'warning')
+        }
+    },
+    async read{{upperCamelCaseModel}} () {
+        try {
+            const { data } = await this.$http.get('api/{{paramsPath}}', {
+                params: {
+                    pagination: 1
+                }
+            })
+            this.rows = data
+        } catch(e) {
+            this.$notify(e.message, 'warning')
+        }
+    },
+    async delete{{upperCamelCaseModel}} () {
+        if(!this.row{{upperCamelCaseModel}}) {
+            this.$notify('Selecciona un registro', 'warning')
+        } else {
+            this.$confirm(`¿Estás seguro de eliminar el registro ${this.row{{upperCamelCaseModel}}.descripcion}?`, 'delete').onOk(async () => {
+                try {
+                    const ref = this.$refs.table{{upperCamelCaseModel}}
+                    const row = ref.rowSelect()
+                    const { message } = await this.$http.delete(`api/{{paramsPath}}/{{multiPathParams}}`)
+                    ref.deleteRow()
+                    this.$notify(message, 'success')
+                } catch(e) {
+                    this.$notify(e.message, 'warning')
+                }
+            })
+        }
+    },
+    async update{{upperCamelCaseModel}}(){
+        try {
+            const ref = this.$refs.table{{upperCamelCaseModel}}
+            const row = ref.rowSelect()
+            const { message } = await this.$http.put('api/{{paramsPath}}', {
+{{updateParams}}
+            })
+            this.openAdd = false
+            ref.updateRow(this.form)
+            this.$notify(message, 'success')
+        } catch (e) {
+            this.$notify(e.message, 'warning')
+        }
+    }
+  },
+  async created () {
+    try {
+      this.read{{upperCamelCaseModel}}()
+    } catch(e) {
+        this.$notify(e.message, 'warning')
+    }
+  }
+}

@@ -1,0 +1,30 @@
+module.exports = async function (_this, opts) {
+    _this.services.{{service}} = class {
+        constructor() {
+            const { knex, getModel } = _this
+            this.knex = knex
+            this.getModel = getModel
+        }
+        create (params = {}) {
+            const {{instanceModel}} = this.getModel('{{nameModel}}')
+            return {{instanceModel}}.create(params)
+        }
+        read (fields = []) {
+            const {{instanceModel}} = this.getModel('{{nameModel}}')
+            return {{instanceModel}}.read(fields)
+        }
+        async readById ({{params}}, fields = []) {
+            const {{instanceModel}} = this.getModel('{{nameModel}}')
+            const result = await {{instanceModel}}.readById({{params}}, fields)
+            return result || {}
+        }
+        update ({{params}}, params) {
+            const {{instanceModel}} = this.getModel('{{nameModel}}')
+            return {{instanceModel}}.update({{params}}, params)
+        }
+        delete ({{params}}) {
+            const {{instanceModel}} = this.getModel('{{nameModel}}')
+            return {{instanceModel}}.delete({{params}})
+        }
+    }
+}
