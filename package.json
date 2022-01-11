@@ -1,13 +1,7 @@
 {
-<<<<<<< HEAD
   "name": "cuderi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "\"# erpservidor\" \r \"# coreServidor\" \r \"# coreServidor\" \r \"# gnproject_servidor\"",
-=======
-  "name": "cuderi-server",
-  "version": "1.0.0",
-  "description": "Core para los proyectos de cuderi",
->>>>>>> 330776a8b1d66a166124586bc42d85697aec61d2
   "main": "app.js",
   "directories": {
     "test": "test"
