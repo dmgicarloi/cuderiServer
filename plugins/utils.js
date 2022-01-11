@@ -64,25 +64,4 @@ module.exports = fp(async function (_this, opts) {
     _this.decorate("$info", async function (req) {
        return req.jwtVerify()
     })
-
-    _this.decorate("updateOrInsert", async function (fieldsKeys = [], records = []) {
-        try {
-            console.log(_this.knex.raw(
-                `? ON CONFLICT (${fieldsKeys.join(',')})
-                        DO NOTHING
-                      RETURNING *;`,
-                [this.knex("menu_usuario").insert(records)],
-              ).toString())
-            return _this.knex.raw(
-                `? ON CONFLICT (${fieldsKeys.join(',')})
-                        DO NOTHING
-                      RETURNING *;`,
-                [this.knex("menu_usuario").insert(records)],
-              )
-        } catch (e) {
-            console.log(e)
-            return _this.httpErrors.badRequest('Ocurrio un problema con el proceso.')
-        }
-    })
-
 });
