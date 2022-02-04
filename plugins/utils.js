@@ -3,8 +3,21 @@
 const fp = require("fastify-plugin");
 
 module.exports = fp(async function (_this, opts) {
+    _this.decorate("error", function (error, message) {
+        error.message = message || error.message
+        if (message) {
+            delete error.detail
+        }
+        error['@@error'] = true
+        return error
+    })
 
     _this.decorate("success", function (type = '', result) {
+        if(typeof result === 'object'){
+            if(result['@@error']){
+                return _this.badRequest(result.detail || result.message)
+            }
+        }
         let message = ''
         switch (type) {
             case 'create':

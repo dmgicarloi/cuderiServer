@@ -1,5 +1,4 @@
 import { ref, reactive } from 'vue'
-import CTable from 'components/CTable'
 import { config } from './config'
 
 export default {
@@ -45,13 +44,14 @@ export default {
             this.openAdd = true
         } 
     },
-    saveAcccion () {
+    async saveAcccion () {
         if (this.action === 'create') {
             this.create{{upperCamelCaseModel}}()
         } else {
-            this.$confirm(`El registro se modificará ¿Desea continuar?`, 'info').onOk(async () => {
+            const confirm = await this.$confirm(`El registro se modificará ¿Desea continuar?`, 'info')
+            if (confirm) {
                 this.update{{upperCamelCaseModel}}()
-            })
+            }
         }
     },
     rowSelect{{upperCamelCaseModel}} (row) {
@@ -86,7 +86,8 @@ export default {
         if(!this.row{{upperCamelCaseModel}}) {
             this.$notify('Selecciona un registro', 'warning')
         } else {
-            this.$confirm(`¿Estás seguro de eliminar el registro ${this.row{{upperCamelCaseModel}}.descripcion}?`, 'delete').onOk(async () => {
+            const confirm = await this.$confirm(`¿Estás seguro de eliminar el registro ${this.row{{upperCamelCaseModel}}.descripcion}?`, 'delete')
+            if (confirm) {
                 try {
                     const ref = this.$refs.table{{upperCamelCaseModel}}
                     const row = ref.rowSelect()
@@ -96,7 +97,7 @@ export default {
                 } catch(e) {
                     this.$notify(e.message, 'warning')
                 }
-            })
+            }
         }
     },
     async update{{upperCamelCaseModel}}(){
