@@ -54,6 +54,17 @@ module.exports = fp(async function (_this, opts) {
         return _this.httpErrors.badRequest(message)
     })
 
+    _this.decorate('inserOrUpdate', function (data = [], keys = [], dataUpdate = [], trx) {
+        const query = _this.knex('menu_usuario')
+                            .insert(data)
+                            .onConflict(keys)
+                            .merge(dataUpdate)
+        if (trx) {
+            query.transacting()
+        }
+        return query
+    })
+
     _this.decorate("pagination", async function (query = null, page = 1, rowsPerPage = 5) {
         try {
             page = parseInt(page)
