@@ -54,7 +54,22 @@ module.exports = fp(async function (_this, opts) {
         return _this.httpErrors.badRequest(message)
     })
 
-    _this.decorate('inserOrUpdate', function (data = [], keys = [], dataUpdate = [], trx) {
+    _this.decorate('insertOrUpdate', function ({ table = '', data = [], keys = [], dataUpdate = [], trx }) {
+        let message = "Se requiere la propiedad table para especificar el nombre de la tabla a usar."
+        if (!table) {
+            console.log(message)
+            return _this.httpErrors.badRequest(message)
+        }
+        if (!Array.isArray(data) && !Array.isArray(keys) && !Array.isArray(dataUpdate)) {
+            let message = "Las propiedades data, keys y dataUpdate deben de ser un arreglo."
+            console.log(message)
+            return _this.httpErrors.badRequest(message)
+        }
+        if (data.length < 1 && keys.length < 1 && dataUpdate.length < 1) {
+            let message = "Se requiere las propiedades { data, keys, dataUpdate }."
+            console.log(message)
+            return _this.httpErrors.badRequest(message)
+        }
         const query = _this.knex('menu_usuario')
                             .insert(data)
                             .onConflict(keys)
