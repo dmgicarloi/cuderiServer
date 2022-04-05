@@ -5,6 +5,7 @@ const AutoLoad = require("fastify-autoload");
 const configJwt = require("./config/jwt");
 const configKnex = require("./config/knex")
 const configCors = require("./config/cors")
+const jsonStream = require("./utils/jsonStream")
 
 module.exports = async function (_this, opts) {
   // Registrando knex constructor de queries
@@ -13,6 +14,8 @@ module.exports = async function (_this, opts) {
   _this.register(require("fastify-jwt"), configJwt);
   // Registrando fastify cors
   _this.register(require('fastify-cors'), configCors)
+  // Agregando la clase jsonStream
+  _this.jsonStream = jsonStream
 
   // Objeto para preparar el DTO
   const dto = {
