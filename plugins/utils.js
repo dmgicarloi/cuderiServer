@@ -3,6 +3,7 @@
 const fp = require("fastify-plugin");
 
 module.exports = fp(async function (_this, opts) {
+
     _this.decorate("error", function (error, message) {
         error.message = message || error.message
         if (message) {
@@ -10,6 +11,57 @@ module.exports = fp(async function (_this, opts) {
         }
         error['@@error'] = true
         return error
+    })
+
+    _this.decorate("sleep", function (timeout) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+              resolve(true)
+            }, timeout)
+        })
+    })
+
+    _this.decorate("batchInsert", function ({ knex, table, data, returning = [], chunkSize = 50, trx }) {
+        return new Promise(function (resolve, reject) {
+            const query = knex.batchInsert(table, data, chunkSize)
+            .returning(returning)
+            if (trx) {
+                query.transacting(trx)
+            }
+            query.then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    })
+
+    _this.decorate("group", function ({ data = [], callbackData = function () {}, chunkSize = 50 }) {
+        const totalRegistros = data.length
+        const result = []
+        let j = -1
+        for (let i = 0; i < totalRegistros; i++) {
+          if (i % chunkSize === 0) {
+            j++
+            if (!result[j]) {
+              result.push([])
+            }
+          }
+          callbackData.call(result[j], data[i], result[j], i, j)
+        }
+        return result
+    })
+
+    _this.decorate("groupQueryIn", function ({ query, whereIn = '', groups = [] }) {
+        for (let i = 0; i < groups.length; i++) {
+            const group = groups[i]
+            if (i === 0) {
+                query = query.whereIn(whereIn, group)
+            } else {
+                query = query.orWhereIn(whereIn, group)
+            }
+        }
+        return query
     })
 
     _this.decorate("success", function (type = '', result) {
