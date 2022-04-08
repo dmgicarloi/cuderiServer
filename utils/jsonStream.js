@@ -1,44 +1,36 @@
 const stream = require('stream')
 const through = require('through')
 
-const stringify = function (op, sep, cl, indent) {
-  indent = indent || 0
-  if (op === false){
-    op = ''
-    sep = '\n'
-    cl = ''
-  } else if (op == null) {
-    op = '[\n'
-    sep = '\n,\n'
-    cl = '\n]\n'
+function stringify (indent = 0) {
+  const open = '['
+  const sep = ','
+  const close = ']'
 
-  }
-  let stream
-  let first = true
-  let anyData = false
-  stream = through(function (data) {
-    anyData = true
-    let json
-    try {
-      json = JSON.stringify(data, null, indent)
-      json = json.replace(/^"|"$|\\/g, '')
-    } catch (err) {
-      return stream.emit('error', err)
-    }
-    if(first) {
-      first = false
-      stream.queue(op + json)
-    } else {
-      stream.queue(sep + json)
-    }
+  let first = true, anyData = false
+  const stream = through(function (data) {
+      anyData = true
+      let json
+      try {
+          json = JSON.stringify(data, null, indent)
+      } catch (err) {
+          return stream.emit('error', err)
+      }
+      if (first) {
+          first = false
+          stream.queue(open + json)
+      } else {
+          stream.queue(sep + json)
+      }
   },
   function () {
-    if(!anyData) {
-      stream.queue(op)
-    }
-    stream.queue(cl)
-    stream.queue(null)
+      if (!anyData) {
+          stream.queue(open + close)
+      } else {
+          stream.queue(close)
+      }
+      stream.queue(null)
   })
+
   return stream
 }
 
