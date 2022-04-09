@@ -12,6 +12,7 @@ function stringify (indent = 0) {
       let json
       try {
           json = JSON.stringify(data, null, indent)
+          json = json.replace(/^"|"$|\\/g, '')
       } catch (err) {
           return stream.emit('error', err)
       }
@@ -37,10 +38,13 @@ function stringify (indent = 0) {
 module.exports = class jsonStream {
   constructor (reply, size = 0) {
     this.reply = reply
-    this.reply.raw.writeHead(200, { 'Content-Type': 'application/octet-stream;charset=UTF-8', 'X-Content-Length': size })
     this.readable = new stream.Readable({ objectMode: true, read: () => {} })
     this.readable.setEncoding('UTF8')
-    this.readable.pipe(stringify('[', ',', ']')).pipe(this.reply.raw)
+    this.reply
+      .code(200)
+      .header('Content-Type', 'application/octet-stream;charset=UTF-8')
+      .header('X-Content-Length', size)
+      .send(this.readable.pipe(stringify('[', ',', ']')))
   }
   push (chunk = '') {
     if (chunk !== null) {
