@@ -3,7 +3,7 @@ const through = require('through')
 
 function stringify (indent = 0) {
   const open = '['
-  const sep = ','
+  const sep = ',\n'
   const close = ']'
 
   let first = true, anyData = false
