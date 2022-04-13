@@ -3,7 +3,7 @@ const through = require('through')
 
 function stringify (indent = 0) {
   const open = '['
-  const sep = ',\n'
+  const sep = ','
   const close = ']'
 
   let first = true, anyData = false
@@ -44,7 +44,7 @@ module.exports = class jsonStream {
       .code(200)
       .header('Content-Type', 'application/octet-stream;charset=UTF-8')
       .header('X-Content-Length', size)
-      .send(this.readable.pipe(stringify('[', ',', ']')))
+      .send(this.readable.pipe(stringify()))
   }
   push (chunk = '') {
     if (chunk !== null) {
