@@ -102,7 +102,7 @@
 
                 // q-input(dense outlined v-model="form.${item.name}" label="${item.name}")
                 inputsTemplate = rows.map(item => {
-                    return `\n                .col-xs-12.col-sm-6\n                    q-input(dense outlined v-model='form.${item.name}' label='${item.name}')`
+                    return `\n                .col-xs-12.col-sm-6\n                    q-input(v-model='form.${item.name}' label='${item.name}')`
                 })
 
                 congifColumns = congifColumns.join(',\n')
