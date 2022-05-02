@@ -6,4 +6,5 @@ q-page.q-pa-sm
   c-modal(v-model="openAdd" :title="action === 'create' ? 'Agregar' : 'Modificar'" @submit="saveAcccion")        
       q-card(flat)
         q-card-section.q-col-gutter-xs
+          q-form(ref="refForm")
             .row.q-col-gutter-xs{{inputsTemplate}}

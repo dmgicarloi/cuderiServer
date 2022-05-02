@@ -45,6 +45,10 @@ export default {
         if (this.action === 'create') {
             this.create{{upperCamelCaseModel}}()
         } else {
+            const validate = await this.$refs.refForm.validate()
+            if (!validate) {
+                return
+            }
             const confirm = await this.$confirm(`El registro se modificará ¿Desea continuar?`, 'info')
             if (confirm) {
                 this.update{{upperCamelCaseModel}}()
@@ -56,6 +60,10 @@ export default {
     },
     async create{{upperCamelCaseModel}} () {
         try {
+            const validate = await this.$refs.refForm.validate()
+            if (!validate) {
+                return
+            }
             const { result, message } = await this.$http.post('api/{{paramsPath}}', this.form)
             const row = {
 {{createParams}}
