@@ -61,7 +61,7 @@
 
                 // Lista todos los campos excepto las llaves primarias
                 data = await kn.raw(`
-                    SELECT column_name as name, data_type as type
+                    SELECT column_name as name, data_type as type, is_nullable
                     FROM INFORMATION_SCHEMA.COLUMNS
                     WHERE  table_name = '${model}' and column_name IS NOT NULL and column_name not in (
                     SELECT a.attname AS name
@@ -102,7 +102,7 @@
 
                 // q-input(dense outlined v-model="form.${item.name}" label="${item.name}")
                 inputsTemplate = rows.map(item => {
-                    return `\n                .col-xs-12.col-sm-6\n                    q-input(v-model='form.${item.name}' label='${item.name}')`
+                    return `\n                .col-xs-12.col-sm-6\n                    q-input(v-model='form.${item.name}' label='${item.name}'${item.is_nullable === "NO" ? ' :rules="[required]"' : ''})`
                 })
 
                 congifColumns = congifColumns.join(',\n')

@@ -1,10 +1,12 @@
 import { ref, reactive } from 'vue'
 import { config } from './config'
+import { required } from 'utils/validate'
 
 export default {
   mixins: [ config ],
   data () {
     return {
+        required,
         buttons: [
             { label: 'Agregar', icon: 'fas fa-plus', click: this.openAgregar },
             { label: 'Modificar', icon: 'fas fa-edit', click: this.openActualizar },
