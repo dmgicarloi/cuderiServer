@@ -90,6 +90,7 @@ export default {
                     const row = ref.rowSelect()
                     const { message } = await this.$http.delete(`api/{{paramsPath}}/{{multiPathParams}}`)
                     ref.deleteRow()
+                    this.row{{upperCamelCaseModel}} = null
                     this.$notify(message, 'success')
                 } catch(e) {
                     this.$notify(e.message, 'warning')
