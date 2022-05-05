@@ -110,6 +110,10 @@ export default {
     },
     async update{{upperCamelCaseModel}}(){
         try {
+            const validate = await this.$refs.refForm.validate()
+            if (!validate) {
+                return
+            }
             const ref = this.$refs.table{{upperCamelCaseModel}}
             const row = ref.rowSelect()
             const { message } = await this.$http.put('api/{{paramsPath}}', {
