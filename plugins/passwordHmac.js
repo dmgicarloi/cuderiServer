@@ -10,6 +10,6 @@ module.exports = fp(async function (_this, opts) {
                 .createHmac('sha256', process.env.secretPassword)
                 .update(decodeURIComponent(password.toString('ascii')))
                 .digest('hex')
+        return password
     })
-    return password
 })
