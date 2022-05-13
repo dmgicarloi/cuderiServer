@@ -122,7 +122,7 @@ module.exports = fp(async function (_this, opts) {
             console.log(message)
             return _this.httpErrors.badRequest(message)
         }
-        const query = _this.knex('menu_usuario')
+        const query = _this.knex(table)
                             .insert(data)
                             .onConflict(keys)
                             .merge(dataUpdate)
