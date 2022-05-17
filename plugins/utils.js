@@ -127,7 +127,7 @@ module.exports = fp(async function (_this, opts) {
                             .onConflict(keys)
                             .merge(dataUpdate)
         if (trx) {
-            query.transacting()
+            query.transacting(trx)
         }
         return query
     })
@@ -135,10 +135,7 @@ module.exports = fp(async function (_this, opts) {
     _this.decorate("pagination", async function (query = null, page = 1, rowsPerPage = 5) {
         try {
             page = parseInt(page)
-            let queryCount = _this.knex.raw(`select count(1) from (${query.toString()}) as tmp`).toString()
-                // .replace(/^select\s.+\sfrom/, 'select count(1) as total from')
-                // .replace(/order by .+$/, '')
-            let [ { total } ] = (await _this.knex.raw(queryCount)).rows
+            let [ { total } ] = (await _this.knex.raw(`select count(1) from (${query.toString()}) as tmp`)).rows
             total = parseInt(total)
             const totalPagination = Math.ceil(total / rowsPerPage)
             page = page < 1 ? 1 : page
