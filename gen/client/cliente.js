@@ -107,7 +107,7 @@
 
                 congifColumns = congifColumns.join(',\n')
                 reactiveParams = reactiveParams.join(',\n')
-                loadParamsUpdate = loadParamsUpdate.join(',\n')
+                loadParamsUpdate = loadParamsUpdate.join('\n')
                 updateParams = updateParams.join(',\n')
                 createParams = createParams.join(',\n')
                 inputsTemplate = inputsTemplate.join('')
