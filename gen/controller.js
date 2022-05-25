@@ -127,6 +127,20 @@
             const nameServiceCamelCase = nameService.substr(0, 1).toLowerCase() + nameService.substr(1, nameService.length - 1)
             const nameModelCamelCase = nameModel.substr(0, 1).toLowerCase() + nameModel.substr(1, nameModel.length - 1)
 
+            const requiredRequiredNotNull = required.slice()
+            requiredNotNull.map(item => {
+                if (requiredRequiredNotNull.indexOf(item) === -1) {
+                    requiredRequiredNotNull.push(item)
+                }
+            })
+
+            const propertiesPropertiesNotNull = arregloProperties.slice()
+            arregloPropertiesNotNull.map(item => {
+                if (propertiesPropertiesNotNull.indexOf(item) === -1) {
+                    propertiesPropertiesNotNull.push(item)
+                }
+            })
+
             let controllerTxt = fs.readFileSync(`${__dirname}/templateController.txt`, { encoding: "utf8" })
             controllerTxt = controllerTxt.replace(/\{\{api\}\}/g, model.replace(/\_/g, '-'))
                                     .replace(/\{\{required\}\}/g, required)
@@ -139,6 +153,8 @@
                                     .replace(/\{\{properties\}\}/g, properties)
                                     .replace(/\{\{propertiesNotNull\}\}/g, propertiesNotNull)
                                     .replace(/\{\{requiredNotNull\}\}/g, requiredNotNull)
+                                    .replace(/\{\{requiredRequiredNotNull\}\}/, requiredRequiredNotNull)
+                                    .replace(/\{\{propertiesPropertiesNotNull\}\}/, propertiesPropertiesNotNull)
         
             fs.writeFileSync(ruta , controllerTxt, { encoding: "utf8" } )
             console.log(`Servicio ${nameController} ha sido generado con éxito.`.green)

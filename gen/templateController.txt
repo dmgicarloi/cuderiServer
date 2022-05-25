@@ -82,9 +82,9 @@ module.exports = async function (_this, opts) {
   schema = {
     body: {
       type: 'object',
-      required: [{{required}}, {{requiredNotNull}}],
+      required: [{{requiredRequiredNotNull}}],
       properties: {
-        {{properties}}, {{propertiesNotNull}}
+        {{propertiesPropertiesNotNull}}
       },
     },
   };
