@@ -6,6 +6,7 @@ const configJwt = require("./config/jwt");
 const configKnex = require("./config/knex")
 const configCors = require("./config/cors")
 const jsonStream = require("./utils/jsonStream")
+const Etag = require('@fastify/etag')
 
 module.exports = async function (_this, opts) {
   // Registrando knex constructor de queries
@@ -14,6 +15,8 @@ module.exports = async function (_this, opts) {
   _this.register(require("fastify-jwt"), configJwt);
   // Registrando fastify cors
   _this.register(require('fastify-cors'), configCors)
+  // Agergando Etag
+  _this.register(Etag)
   // Agregando la clase jsonStream
   _this.jsonStream = jsonStream
 

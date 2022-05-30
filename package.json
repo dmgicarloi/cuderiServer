@@ -17,6 +17,7 @@
   "author": "Carlo André Cuya Del Risco",
   "license": "ISC",
   "dependencies": {
+    "@fastify/etag": "^3.0.0",
     "busboy": "^1.5.0",
     "fastify": "^3.27.2",
     "fastify-autoload": "^3.11.0",
