@@ -5,20 +5,40 @@ module.exports = async function (_this, opts) {
             const { knex } = _this
             this.knex = knex
         }
-        create (params = {}) {
-            return this.knex(this.name).insert(params).returning([{{returning}}])
+        create (params = {}, trx) {
+            const query = this.knex(this.name).insert(params).returning([{{returning}}])
+            if (trx) {
+                query.transacting(trx)
+            }
+            return query
         }
-        read (fields = []) {
-            return this.knex(this.name).select(fields)
+        read (fields = [], trx) {
+            const query = this.knex(this.name).select(fields)
+            if (trx) {
+                query.transacting(trx)
+            }
+            return query
         }
-        readById ({{params}}, fields = []) {
-            return this.knex(this.name).select(fields).where({{paramsData}}).first()
+        readById ({{params}}, fields = [], trx) {
+            const query = this.knex(this.name).select(fields).where({{paramsData}}).first()
+            if (trx) {
+                query.transacting(trx)
+            }
+            return query
         }
-        update ({{params}}, params) {
-            return this.knex(this.name).update(params).where({{paramsData}})
+        update ({{params}}, params, trx) {
+            const query = this.knex(this.name).update(params).where({{paramsData}})
+            if (trx) {
+                query.transacting(trx)
+            }
+            return query
         }
-        delete ({{params}}) {
-            return this.knex(this.name).where({{paramsData}}).del()
+        delete ({{params}}, trx) {
+            const query = this.knex(this.name).where({{paramsData}}).del()
+            if (trx) {
+                query.transacting(trx)
+            }
+            return query
         }
     }
 }
