@@ -1,10 +1,15 @@
-module.exports = function process_RS(streamExcel, book) {
+module.exports = function process_RS(tempExcel = '', book) {
   return new Promise((resolve, rejects) => {
     try {
       var buffers = []
       index = book || 0
-      streamExcel.on("data", function(data) { buffers.push(data) })
-      streamExcel.on("end", function() {
+      const XLSX = require('xlsx')
+      const fs = require("fs")
+      const path = require('path')
+      const pathXslx = path.join(process.cwd(), `/public`, tempExcel)
+      const readerStream = fs.createReadStream(pathXslx)
+      readerStream.on("data", function(data) { buffers.push(data) })
+      readerStream.on("end", function() {
         var buffer = Buffer.concat(buffers)
         var workbook = XLSX.read(buffer, {type:"buffer"})
         const ws = workbook.Sheets[workbook.SheetNames[index]]
