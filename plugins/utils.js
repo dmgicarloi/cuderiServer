@@ -142,11 +142,42 @@ module.exports = fp(async function (_this, opts) {
             const pagination = (page - 1) * rowsPerPage
             query.limit(rowsPerPage).offset(pagination)
             const data = await query
-            return { page, rowsPerPage, total, totalPagination, data }
+            let de = 0
+            de = page >= totalPagination ? total : page * rowsPerPage
+            return { page, rowsPerPage, total, totalPagination, de: `${de} de ${total}`, data }
         } catch (e) {
             console.log(e)
             return _this.httpErrors.badRequest('Ocurrio un problema con la paginación')
         }
+    })
+
+    _this.decorate("transformFields", function (fields = [], fields_full = {}) {
+        try {
+            const result = []
+            if (fields.length > 0) {
+                fields.map(field => {
+                    let campo = field
+                    if (fields_full[field]) {
+                        result.push(fields_full[campo])
+                    } else {
+                        console.log('No existe el campo ' +'"'+campo+'"'+ ', revisa los fields del cliente, tiene que coincidir con el obj del model.')
+                    }
+                })
+            }
+            else {
+                for (const item in fields_full) {
+                    result.push(fields_full[item])
+                }
+            }
+            return result
+        } catch (e) {
+            return _this.httpErrors.badRequest('Ocurrio un problema con la transformación de campos')
+        }
+    })
+
+    _this.decorate("readExcel", function (streamExcel) {
+        const excel = require("../utils/excel")
+        return excel(streamExcel)
     })
 
     _this.decorate("$info", async function (req) {

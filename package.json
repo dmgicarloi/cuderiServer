@@ -30,7 +30,8 @@
     "fastify-swagger": "^4.15.0",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
-    "through": "^2.3.8"
+    "through": "^2.3.8",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "colors": "^1.4.0",
