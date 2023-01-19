@@ -9,7 +9,7 @@ q-page.q-pa-sm
             selection="single"
             ref="table{{upperCamelCaseModel}}"
             @row-select="rowSelect{{upperCamelCaseModel}}"
-            css="height:calc(100vh - 160px)"
+            css="height:calc(100vh - 170px)"
             :context="this")
   c-modal(v-model="openAdd" :title="action === 'create' ? 'Agregar' : 'Modificar'" @submit="saveAcccion")        
       q-card(flat)
