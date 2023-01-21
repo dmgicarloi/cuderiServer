@@ -18,6 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/etag": "^3.0.0",
+    "axios": "^1.2.3",
     "busboy": "^1.5.0",
     "fastify": "^3.27.2",
     "fastify-autoload": "^3.11.0",

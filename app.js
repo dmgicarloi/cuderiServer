@@ -7,6 +7,13 @@ const configKnex = require("./config/knex")
 const configCors = require("./config/cors")
 const jsonStream = require("./utils/jsonStream")
 const Etag = require('@fastify/etag')
+const $http = require('axios')
+
+$http.interceptors.response.use(response => {
+  return response.data
+}, async ({ response }) => {
+  return Promise.reject(response.data)
+})
 
 module.exports = async function (_this, opts) {
   // Registrando knex constructor de queries
@@ -19,6 +26,8 @@ module.exports = async function (_this, opts) {
   _this.register(Etag)
   // Agregando la clase jsonStream
   _this.jsonStream = jsonStream
+  // Agregando Axios
+  _this.$http = $http
 
   // Objeto para preparar el DTO
   const dto = {
