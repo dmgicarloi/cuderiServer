@@ -8,6 +8,7 @@ const knex = require('knex')
 const types = require('pg').types
 const configCors = require("./config/cors")
 const jsonStream = require("./utils/jsonStream")
+const date = require("./utils/date")
 const Etag = require('@fastify/etag')
 const $http = require('axios')
 
@@ -23,6 +24,8 @@ module.exports = async function (_this, opts) {
   types.setTypeParser(1700, val => parseFloat(val))
   // Registrando knex constructor de queries
   _this.knex = knex(configKnex)
+  // Agregando soporte para solicitudes tipo formulario
+  _this.register(require('@fastify/formbody'))
   // Registrando jwt(JSON WEB TOKEN)
   _this.register(require("fastify-jwt"), configJwt)
   // Registrando fastify cors
@@ -33,6 +36,8 @@ module.exports = async function (_this, opts) {
   _this.jsonStream = jsonStream
   // Agregando Axios
   _this.$http = $http
+  // Agregando libreria date
+  _this.date = date
 
   // Objeto para preparar el DTO
   const dto = {
