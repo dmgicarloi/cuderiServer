@@ -1,9 +1,11 @@
 "use strict";
 
-const path = require("path");
-const AutoLoad = require("fastify-autoload");
-const configJwt = require("./config/jwt");
+const path = require("path")
+const AutoLoad = require("fastify-autoload")
+const configJwt = require("./config/jwt")
 const configKnex = require("./config/knex")
+const knex = require('knex')
+const types = require('pg').types
 const configCors = require("./config/cors")
 const jsonStream = require("./utils/jsonStream")
 const Etag = require('@fastify/etag')
@@ -16,10 +18,13 @@ $http.interceptors.response.use(response => {
 })
 
 module.exports = async function (_this, opts) {
+  // Convirtiendo enteros y decimales de cadena a numéricos
+  types.setTypeParser(20, val => parseInt(val, 10))
+  types.setTypeParser(1700, val => parseFloat(val))
   // Registrando knex constructor de queries
-  _this.register(require("fastify-knexjs"), configKnex);
+  _this.knex = knex(configKnex)
   // Registrando jwt(JSON WEB TOKEN)
-  _this.register(require("fastify-jwt"), configJwt);
+  _this.register(require("fastify-jwt"), configJwt)
   // Registrando fastify cors
   _this.register(require('fastify-cors'), configCors)
   // Agergando Etag
@@ -36,12 +41,12 @@ module.exports = async function (_this, opts) {
   }
   Object.assign(_this, dto)
   // Cargar Clases
-  await _this.register(require("./models/app"));
-  await _this.register(require("./services/app"));
+  await _this.register(require("./models/app"))
+  await _this.register(require("./services/app"))
   // Carpeta de apis con uso restringido
-  await _this.register(require("./controllers/private/app"));
+  await _this.register(require("./controllers/private/app"))
   // Carpeta de apis públicas
-  await _this.register(require("./controllers/public/app"));
+  await _this.register(require("./controllers/public/app"))
 
   await _this.register(AutoLoad, {
     dir: path.join(__dirname, "plugins"),
