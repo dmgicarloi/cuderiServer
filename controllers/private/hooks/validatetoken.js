@@ -5,7 +5,16 @@ module.exports = function (req, reply, done) {
         '/documentation'
     ]
     req.jwtVerify(function (err, decoded) {
-        const { token } = req.query
+        let token = req.query.token
+        if (req.body) {
+            if (req.body.data) {
+                try {
+                    const data = JSON.parse(req.body.data)
+                    token = data.token
+                    req.body = data
+                } catch (e) {}
+            }   
+        }
         if (token) {
             try {
                 jwt.verify(token, process.env.jwtSecretPass)
