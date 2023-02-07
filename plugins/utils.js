@@ -70,6 +70,11 @@ module.exports = fp(async function (_this, opts) {
                 return _this.badRequest(result.detail || result.message)
             }
         }
+        if (result) {
+            if (result.constructor.name === 'BadRequestError') {
+                return _this.badRequest(result.message)
+            }
+        }
         let message = ''
         switch (type) {
             case 'create':
