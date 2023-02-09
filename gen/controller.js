@@ -7,12 +7,10 @@
             colors.enable()
 
             const validateTypes = (row) => {
-                if (/^character|text/.test(row.type)) {
+                if (/^character|text|date|timestamp|datetime/.test(row.type)) {
                     row.type = '\'string\''
                 } else if (/^integer|bigint|smallint|numeric/.test(row.type)) {
                     row.type = '\'number\''
-                } else if (/^(timestamp|date|datetime)/.test(row.type)) {
-                    row.type = '\'date\''
                 }
             }
         

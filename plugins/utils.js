@@ -137,6 +137,61 @@ module.exports = fp(async function (_this, opts) {
         return query
     })
 
+    _this.decorate('deleteMasivo', async function ({ data = [], table = '', keys = [], trx, knex, chunkSize = 100 }) {
+        // EJEMPLO
+        // await _this.deleteMasivo({
+        //     data,
+        //     table,
+        //     keys: ['key1', 'key2', 'key3'],
+        //     trx,
+        //     knex
+        // })
+        try {
+            table =  table ? (String(table)).toLowerCase() : ''
+            const groupQuery = []
+            // agrupando el arreglo de datos
+            const groups = _this.group(data, function (item) {
+                let newItem = {}
+                // Cambiando llaves a minúsculas
+                for (const key in item) {
+                    newItem[(String(key)).toLowerCase()] = item[key]
+                }
+                // Generando el nuevo objeto con las llaves en minúsculas
+                const obj = {}
+                keys.map(key => {
+                    key = (String(key)).toLowerCase()
+                    if (!obj[key]) {
+                        obj[key] = newItem[key]
+                    }
+                })
+                this.push(obj)
+            }, chunkSize)
+            // Recorriendo los grupos para generar el query agrupado
+            for (const group of groups) {
+                const query = knex(table).delete()
+                group.map((item, index)=>{
+                    if (index === 0) {
+                    query.where(item)
+                    } else {
+                    query.orWhere(item)
+                    }
+                })
+                if (trx) {
+                    query.transacting(trx)
+                }
+                groupQuery[groupQuery.length] = query
+            }
+            // Ejecutando los queries generados
+            for (const query of groupQuery) {
+                await query
+            }
+            // Retorno de los queries agrupados
+            return groupQuery
+        } catch (e) {
+            return e
+        }
+    })
+    
     _this.decorate("pagination", async function (query = null, page = 1, rowsPerPage = 5) {
         try {
             page = parseInt(page)
