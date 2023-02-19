@@ -2,13 +2,10 @@
 
 const path = require("path");
 const AutoLoad = require("fastify-autoload");
-const configSwagger = require('../../config/swagger')
 const validatetoken = require('./hooks/validatetoken')
 const validatePermissions = require('./hooks/validatePermissions')
 
 module.exports = async function (_this, opts) {
-  // Registrando swagger
-  _this.register(require('fastify-swagger'), configSwagger)
   // Prefijo para las apis
   opts.prefix = process.env.prefix;
 

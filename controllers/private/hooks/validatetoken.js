@@ -1,9 +1,6 @@
 var jwt = require('jsonwebtoken')
 
 module.exports = function (req, reply, done) {
-    const exclude = [
-        '/documentation'
-    ]
     req.jwtVerify(function (err, decoded) {
         let token = req.query.token
         if (req.body) {
@@ -27,25 +24,10 @@ module.exports = function (req, reply, done) {
                 })
             }
         } else {
-            try {
-                if (decoded) {
-                    done()
-                } else {
-                    let pass = false
-                    for(let i = 0; i < exclude.length; i++) {
-                        if (new RegExp(`^${exclude[i]}`).test(req.url)) {
-                            pass = true
-                            break
-                        }
-                    }
-                    if (pass) {
-                        done()
-                    } else {
-                        reply.send(err)
-                    }
-                }
-            } catch (e) {
-                reply.send(e)
+            if (decoded) {
+                done()
+            } else {
+                reply.send(err)
             }
         }
     })
