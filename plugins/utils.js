@@ -71,7 +71,7 @@ module.exports = fp(async function (_this, opts) {
             }
         }
         if (result) {
-            if (result.constructor.name === 'BadRequestError') {
+            if (result.constructor.name === 'BadRequestError' || result.constructor.name === 'DatabaseError') {
                 return _this.badRequest(result.message)
             }
         }
@@ -212,6 +212,18 @@ module.exports = fp(async function (_this, opts) {
     })
 
     _this.decorate("transformFields", function (fields = [], fields_full = {}) {
+        let hasApelativo = false
+        for (const key in fields) {
+            const field = fields[key]
+            const apelativo = field.split('as')
+            if (apelativo.length > 1) {
+                hasApelativo = true
+                break
+            }
+        }
+        if (hasApelativo) {
+            return fields
+        }
         try {
             const result = []
             if (fields.length > 0) {
