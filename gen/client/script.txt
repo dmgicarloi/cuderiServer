@@ -75,11 +75,7 @@ export default {
     },
     async read{{upperCamelCaseModel}} () {
         try {
-            const data = await this.$http.get('api/{{paramsPath}}', {
-                params: {
-                    // pagination: 1
-                }
-            })
+            const data = await this.$http.get('api/{{paramsPath}}')
             this.rows = data
         } catch(e) {
             this.$notify(e.message, 'warning')
